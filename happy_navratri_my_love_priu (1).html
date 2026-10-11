@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Navratri, My Love Priu! ✨❤️</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        festiveGold: '#FFD700',
+                        festiveRed: '#D80032',
+                        festiveOrange: '#FF6B00',
+                        festivePurple: '#3D0C5A',
+                        festivePink: '#FF2E93',
+                        glassBg: 'rgba(255, 255, 255, 0.08)',
+                        glassBorder: 'rgba(255, 215, 0, 0.25)',
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel Decorative"', 'serif'],
+                        romantic: ['"Great Vibes"', 'cursive'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-15px) rotate(3deg)' },
+                        },
+                        glow: {
+                            '0%': { filter: 'drop-shadow(0 0 10px rgba(255,215,0,0.4))' },
+                            '100%': { filter: 'drop-shadow(0 0 25px rgba(255,107,0,0.9))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #180325 0%, #3a002c 40%, #1f0122 100%);
+            color: #FFF;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-card-interactive {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card-interactive:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 15px 35px rgba(255, 46, 147, 0.3);
+        }
+
+        /* Particle Overlay Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Glowing text effects */
+        .glow-text-gold {
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 107, 0, 0.5);
+        }
+
+        .glow-text-pink {
+            text-shadow: 0 0 12px rgba(255, 46, 147, 0.8), 0 0 24px rgba(216, 0, 50, 0.5);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #180325;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF6B00;
+            border-radius: 4px;
+        }
+
+        /* Diya Flame Animation */
+        .flame {
+            background: radial-gradient(circle, #FFF 10%, #FFD700 40%, #FF4500 80%, transparent 100%);
+            border-radius: 50% 50% 20% 20%;
+            transform-origin: center bottom;
+            animation: flicker 0.1s infinite alternate ease-in-out;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-1deg); opacity: 0.95; }
+            100% { transform: scale(1.08) rotate(1deg); opacity: 1; filter: drop-shadow(0 0 12px #FFD700); }
+        }
+
+        /* Flip card styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-100 relative selection:bg-festivePink selection:text-white">
+
+    <!-- Canvas for Floating Marigold Petals & Sparkles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Header Navigation & Controls -->
+    <nav class="fixed top-0 left-0 w-full z-50 px-4 py-3 bg-opacity-40 backdrop-blur-md bg-black/30 border-b border-festiveGold/20 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl animate-spin-slow">🌺</span>
+            <span class="font-heading text-lg font-bold bg-gradient-to-r from-festiveGold via-pink-400 to-festiveOrange bg-clip-text text-transparent">
+                Priu & Navratri
+            </span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="musicToggleBtn" onclick="toggleAudio()" class="px-3 py-1.5 rounded-full glass-card border border-festiveGold/40 text-xs md:text-sm font-semibold flex items-center gap-2 hover:bg-festiveGold/20 transition-all cursor-pointer">
+                <i data-lucide="music" class="w-4 h-4 text-festiveGold"></i>
+                <span id="musicStatus">Play Garba Music 🎵</span>
+            </button>
+            <!-- Local HTML5 Audio Element for music.mp3 -->
+            <audio id="bgMusic" loop preload="auto">
+                <source src="music.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-20 flex flex-col gap-16">
+
+        <!-- HERO SECTION -->
+        <section class="text-center relative py-10 flex flex-col items-center justify-center">
+            
+            <!-- Festive Halo Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border-festiveGold/50 text-festiveGold text-xs md:text-sm font-semibold mb-6 animate-pulse-slow">
+                <i data-lucide="sparkles" class="w-4 h-4 text-festiveGold"></i>
+                <span>Designed Especially for My Beloved Priu</span>
+                <i data-lucide="heart" class="w-4 h-4 text-festivePink fill-festivePink"></i>
+            </div>
+
+            <!-- Main Heading -->
+            <h1 class="font-heading text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-amber-400 glow-text-gold mb-4 leading-tight">
+                Happy Navratri, Priu! ✨
+            </h1>
+
+            <p class="font-romantic text-3xl sm:text-4xl text-pink-300 glow-text-pink mb-8">
+                My love, my light, and my eternal celebration ❤️
+            </p>
+
+            <p class="max-w-xl text-gray-300 text-sm md:text-base leading-relaxed mb-8 px-2">
+                May Maa Durga bless your life with boundless joy, glowing health, divine grace, and endless love. You make every day feel like a vibrant festival in my heart.
+            </p>
+
+            <!-- Hero Action Interactive Diyas Light-Up -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-md">
+                <button onclick="lightUpAllDiyas()" class="w-full sm:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-festiveOrange via-festiveRed to-festivePink font-bold text-white shadow-lg hover:shadow-festivePink/50 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer group">
+                    <i data-lucide="flame" class="w-5 h-5 text-yellow-300 group-hover:animate-bounce"></i>
+                    <span>Light Diyas & Spread Blessings 🪔</span>
+                </button>
+                <button onclick="scrollToSection('love-letter')" class="w-full sm:w-auto px-6 py-4 rounded-full glass-card border border-festiveGold/40 text-festiveGold font-semibold hover:bg-festiveGold/20 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="mail-open" class="w-4 h-4"></i>
+                    <span>Read Love Letter</span>
+                </button>
+            </div>
+
+            <!-- Virtual Diya Display -->
+            <div id="diyaContainer" class="flex justify-center items-center gap-6 sm:gap-10 mt-12 transition-all duration-500">
+                <!-- Diya 1 -->
+                <div class="diya-item flex flex-col items-center">
+                    <div class="diya-flame w-4 h-6 flame rounded-full mb-1 opacity-40 transition-opacity duration-500"></div>
+                    <div class="w-12 h-6 bg-gradient-to-b from-amber-600 to-amber-800 rounded-b-full border-t border-amber-400 shadow-md"></div>
+                </div>
+                <!-- Diya 2 (Center Big) -->
+                <div class="diya-item flex flex-col items-center transform -translate-y-2">
+                    <div class="diya-flame w-5 h-8 flame rounded-full mb-1 opacity-40 transition-opacity duration-500"></div>
+                    <div class="w-16 h-8 bg-gradient-to-b from-amber-500 to-amber-900 rounded-b-full border-t border-amber-300 shadow-lg"></div>
+                </div>
+                <!-- Diya 3 -->
+                <div class="diya-item flex flex-col items-center">
+                    <div class="diya-flame w-4 h-6 flame rounded-full mb-1 opacity-40 transition-opacity duration-500"></div>
+                    <div class="w-12 h-6 bg-gradient-to-b from-amber-600 to-amber-800 rounded-b-full border-t border-amber-400 shadow-md"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 9 DAYS OF NAVRATRI & DEDICATIONS SECTION -->
+        <section id="navratri-days" class="flex flex-col gap-8">
+            <div class="text-center">
+                <span class="text-festiveGold text-xs uppercase font-bold tracking-widest">9 Forms of Divinity & Love</span>
+                <h2 class="font-heading text-2xl sm:text-4xl font-bold text-white mt-1">9 Days, 9 Blessings for Priu 🌸</h2>
+                <p class="text-gray-300 text-sm mt-2">Click on each day card to reveal my special wish & appreciation note for you!</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="nineDaysGrid">
+                <!-- Javascript will inject 9 cards here dynamic & interactive -->
+            </div>
+        </section>
+
+        <!-- INTERACTIVE DANDIYA RAAS MINI BEAT GAME -->
+        <section class="glass-card rounded-3xl p-6 sm:p-10 border border-festiveGold/30 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-festivePink/20 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="flex-1 text-center md:text-left">
+                    <span class="inline-block px-3 py-1 rounded-full bg-festiveOrange/20 border border-festiveOrange/40 text-festiveOrange text-xs font-bold mb-3">
+                        Interactive Fun 🪘
+                    </span>
+                    <h3 class="font-heading text-2xl sm:text-3xl font-bold text-white">Let's Play Dandiya Together, Priu!</h3>
+                    <p class="text-gray-300 text-sm mt-2 leading-relaxed">
+                        Tap the Dandiya sticks together in rhythm to create celebratory spark explosions and build up our love combo score!
+                    </p>
+                    
+                    <div class="mt-4 flex items-center justify-center md:justify-start gap-4">
+                        <div class="glass-card px-4 py-2 rounded-xl text-center">
+                            <span class="text-xs text-gray-400 block">Love Beats</span>
+                            <span id="dandiyaScore" class="text-2xl font-bold text-festiveGold">0</span>
+                        </div>
+                        <div class="glass-card px-4 py-2 rounded-xl text-center">
+                            <span class="text-xs text-gray-400 block">Sparkle Streak</span>
+                            <span id="dandiyaCombo" class="text-2xl font-bold text-festivePink">0x</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Sticks Area -->
+                <div class="flex flex-col items-center justify-center">
+                    <button id="dandiyaBtn" onclick="hitDandiya(event)" class="relative group p-8 rounded-full bg-gradient-to-br from-pink-600/40 to-purple-800/40 border-2 border-festiveGold/50 hover:border-festiveGold hover:scale-105 active:scale-95 transition-all shadow-2xl cursor-pointer">
+                        <div class="flex items-center justify-center w-28 h-28 relative">
+                            <!-- Left Stick -->
+                            <div id="stickLeft" class="absolute w-2 h-24 bg-gradient-to-b from-yellow-300 via-pink-500 to-purple-600 rounded-full transform -rotate-45 transition-transform duration-150 origin-bottom border border-white/40"></div>
+                            <!-- Right Stick -->
+                            <div id="stickRight" class="absolute w-2 h-24 bg-gradient-to-b from-yellow-300 via-pink-500 to-purple-600 rounded-full transform rotate-45 transition-transform duration-150 origin-bottom border border-white/40"></div>
+                            <!-- Center Sparkle Icon -->
+                            <i data-lucide="sparkles" class="w-8 h-8 text-festiveGold animate-pulse"></i>
+                        </div>
+                        <span class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-festiveOrange text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                            TAP HERE! 🥢
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ROMANTIC LOVE LETTER SECTION -->
+        <section id="love-letter" class="flex flex-col items-center gap-6">
+            <div class="text-center">
+                <span class="text-festivePink text-xs uppercase font-bold tracking-widest">From My Heart To Yours</span>
+                <h2 class="font-heading text-2xl sm:text-4xl font-bold text-white mt-1">A Special Navratri Letter For Priu 💌</h2>
+            </div>
+
+            <!-- Flip Card Container -->
+            <div class="w-full max-w-2xl h-[420px] perspective-1000 cursor-pointer" onclick="toggleLetterFlip()">
+                <div id="letterCardInner" class="relative w-full h-full duration-700 transform-style-3d glass-card rounded-3xl border-2 border-festiveGold/40 p-2 shadow-2xl">
+                    
+                    <!-- Front Cover -->
+                    <div class="absolute inset-0 w-full h-full rounded-3xl p-8 flex flex-col items-center justify-center text-center backface-hidden bg-gradient-to-b from-purple-950/80 to-pink-950/80">
+                        <div class="w-20 h-20 rounded-full bg-festivePink/20 border border-festivePink flex items-center justify-center mb-6 animate-bounce">
+                            <i data-lucide="heart" class="w-10 h-10 text-festivePink fill-festivePink"></i>
+                        </div>
+                        <h3 class="font-heading text-2xl font-bold text-festiveGold">For My Dearest Pritika</h3>
+                        <p class="font-romantic text-2xl text-pink-300 mt-2">"You are the garba rhythm in my heart..."</p>
+                        <p class="text-xs text-gray-400 mt-6 bg-white/10 px-4 py-2 rounded-full border border-white/20">
+                            ✨ Click anywhere on this envelope to open ✨
+                        </p>
+                    </div>
+
+                    <!-- Back Cover (Letter Content) -->
+                    <div class="absolute inset-0 w-full h-full rounded-3xl p-6 sm:p-8 flex flex-col justify-between backface-hidden rotate-y-180 bg-gradient-to-b from-slate-900/90 to-purple-950/90 overflow-y-auto">
+                        <div class="space-y-4 text-sm sm:text-base text-gray-200 leading-relaxed font-sans">
+                            <div class="flex justify-between items-center border-b border-white/10 pb-2">
+                                <span class="font-heading font-bold text-festiveGold">My Dearest Priu ❤️,</span>
+                                <span class="text-xs text-pink-300">Navratri Special</span>
+                            </div>
+                            <p>
+                                Happy Navratri, my love! On this auspicious occasion of nine holy nights, I want to tell you how deeply grateful I am to have you in my life. You bring as much warmth and brightness to my world as a glowing Diya during garba night.
+                            </p>
+                            <p>
+                                Just like the rhythmic beats of dandiya sticks sync in harmony, every moment with you feels like a beautiful dance. May Maa Durga keep us together, shield us from all worries, and bless your beautiful smile forever!
+                            </p>
+                            <p class="font-romantic text-2xl text-festiveGold pt-2 text-right">
+                                Always & Forever Yours ❤️
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-2 border-t border-white/10 text-center text-xs text-pink-300">
+                            (Click again to close envelope)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER BLESSING -->
+        <footer class="text-center text-xs sm:text-sm text-gray-400 pt-10 pb-6 border-t border-white/10 flex flex-col items-center gap-3">
+            <p class="flex items-center gap-1 font-semibold text-gray-300">
+                Crafted with endless love <i data-lucide="heart" class="w-4 h-4 text-festiveRed fill-festiveRed"></i> for Pritika (Priu)
+            </p>
+            <p class="text-gray-500 text-xs">
+                Wishing you 9 nights of happiness, dance, and togetherness! ✨
+            </p>
+        </footer>
+
+    </main>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        
+        // 9 Days of Navratri Data
+        const navratriDays = [
+            {
+                day: "Day 1 - Pratipada",
+                goddess: "Maa Shailaputri",
+                color: "Royal Blue / Yellow",
+                colorClass: "from-blue-600/30 to-yellow-500/20",
+                wish: "May your spirit remain as pure, strong, and unshakeable as the mountains. You are my foundational strength, Priu!"
+            },
+            {
+                day: "Day 2 - Dwitiya",
+                goddess: "Maa Brahmacharini",
+                color: "Green",
+                colorClass: "from-emerald-600/30 to-teal-500/20",
+                wish: "May your wisdom, grace, and inner peace flourish endlessly. Your calm smile is my favorite sanctuary."
+            },
+            {
+                day: "Day 3 - Tritiya",
+                goddess: "Maa Chandraghanta",
+                color: "Grey / Orange",
+                colorClass: "from-orange-600/30 to-amber-500/20",
+                wish: "May your life be filled with courage, charm, and divine radiance. You illuminate my darker days!"
+            },
+            {
+                day: "Day 4 - Chaturthi",
+                goddess: "Maa Kushmanda",
+                color: "Orange",
+                colorClass: "from-orange-500/30 to-red-500/20",
+                wish: "May your vibrant energy and sweet laughter illuminate the entire universe just like the morning sun."
+            },
+            {
+                day: "Day 5 - Panchami",
+                goddess: "Maa Skandamata",
+                color: "White / Light Blue",
+                colorClass: "from-cyan-600/30 to-blue-400/20",
+                wish: "May you be blessed with infinite warmth, motherly affection, and boundless care. Your kindness inspires me daily."
+            },
+            {
+                day: "Day 6 - Shashthi",
+                goddess: "Maa Katyayani",
+                color: "Red",
+                colorClass: "from-red-600/30 to-rose-500/20",
+                wish: "May you stand fierce and victorious against any obstacle. You are my bravest warrior and queen."
+            },
+            {
+                day: "Day 7 - Saptami",
+                goddess: "Maa Kalaratri",
+                color: "Royal Blue / Dark",
+                colorClass: "from-indigo-600/30 to-purple-600/20",
+                wish: "May all fears and doubts vanish from your path, replaced by eternal confidence and protective light."
+            },
+            {
+                day: "Day 8 - Ashtami",
+                goddess: "Maa Mahagauri",
+                color: "Pink / Magenta",
+                colorClass: "from-pink-600/30 to-rose-400/20",
+                wish: "May your life be showered with peace, elegance, and pure joy. You shine brighter than any star!"
+            },
+            {
+                day: "Day 9 - Navami",
+                goddess: "Maa Siddhidatri",
+                color: "Purple",
+                colorClass: "from-purple-600/30 to-fuchsia-500/20",
+                wish: "May all your dreams, aspirations, and wishes come true. I am forever blessed to celebrate life with you!"
+            }
+        ];
+
+        // Global State variables
+        let audioCtx = null;
+        let isPlayingAudio = false;
+        let dandiyaScore = 0;
+        let dandiyaCombo = 0;
+        let letterFlipped = false;
+
+        // Render Navratri Days Cards
+        // Toggle Audio for music.mp3
+        function toggleAudio() {
+            const audio = document.getElementById('bgMusic');
+            const btnText = document.getElementById('musicStatus');
+
+            if (!audio) return;
+
+            if (isPlayingAudio) {
+                audio.pause();
+                isPlayingAudio = false;
+                btnText.innerText = "Play Garba Music 🎵";
+            } else {
+                audio.play().then(() => {
+                    isPlayingAudio = true;
+                    btnText.innerText = "Pause Music ⏸️";
+                }).catch(error => {
+                    console.log("Audio playback failed or requires user interaction:", error);
+                    btnText.innerText = "Click to Play 🎵";
+                });
+            }
+        }
+
+        // Dandiya Raas Interactive Rhythm Game
+        function hitDandiya(event) {
+            dandiyaScore += 10;
+            dandiyaCombo += 1;
+
+            document.getElementById('dandiyaScore').innerText = dandiyaScore;
+            document.getElementById('dandiyaCombo').innerText = dandiyaCombo + 'x';
+
+            // Animate sticks together
+            const left = document.getElementById('stickLeft');
+            const right = document.getElementById('stickRight');
+
+            left.style.transform = 'rotate(-10deg) translateX(12px)';
+            right.style.transform = 'rotate(10deg) translateX(-12px)';
+
+            setTimeout(() => {
+                left.style.transform = 'rotate(-45deg)';
+                right.style.transform = 'rotate(45deg)';
+            }, 150);
+
+            // Play Dandiya Stick Clash Sound
+            playDandiyaSound();
+
+            // Burst sparkles around click
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width;
+            const y = (event.clientY - rect.top) / rect.height;
+
+            confetti({
+                particleCount: 20,
+                spread: 40,
+                origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight },
+                colors: ['#FFD700', '#FF2E93', '#00FFFF']
+            });
+        }
+
+        // Sound Synthesis (Web Audio API for Garba & Dandiya Beats)
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playChimeSound() {
+            initAudioContext();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.6); // C6
+
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.6);
+        }
+
+        function playDandiyaSound() {
+            initAudioContext();
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
+
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+        }
+
+        function toggleAudio() {
+            initAudioContext();
+            const btnText = document.getElementById('musicStatus');
+
+            if (isPlayingAudio) {
+                clearInterval(beatInterval);
+                isPlayingAudio = false;
+                btnText.innerText = "Play Garba Beats 🎵";
+            } else {
+                isPlayingAudio = true;
+                btnText.innerText = "Pause Music ⏸️";
+                
+                let beatCount = 0;
+                // Simple 8-beat Garba Rhythm Loop Simulation
+                beatInterval = setInterval(() => {
+                    if (!audioCtx) return;
+
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    if (beatCount % 2 === 0) {
+                        // Bass Beat (Dholak Boom)
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(120, now);
+                        osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+                        gain.gain.setValueAtTime(0.5, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    } else {
+                        // Treble High Click (Dandiya Tap)
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(600, now);
+                        osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    }
+
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+
+                    beatCount = (beatCount + 1) % 8;
+                }, 300);
+            }
+        }
+
+        // Particle Canvas Logic (Floating Petals & Stars)
+        function initParticles() {
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = Array.from({ length: 40 }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 3 + 1,
+                color: ['#FFD700', '#FF2E93', '#FF6B00', '#FFF'][Math.floor(Math.random() * 4)],
+                vy: Math.random() * 0.8 + 0.2,
+                vx: Math.sin(Math.random() * Math.PI) * 0.5,
+                opacity: Math.random() * 0.7 + 0.3
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+
+                    if (p.y > height) {
+                        p.y = -10;
+                        p.x = Math.random() * width;
+                    }
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.opacity;
+                    ctx.fill();
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Page Load Init
+        window.onload = function () {
+            lucide.createIcons();
+            renderNavratriGrid();
+            initParticles();
+        };
+    </script>
+</body>
+</html>
