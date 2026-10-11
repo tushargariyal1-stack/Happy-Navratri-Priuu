@@ -54,91 +54,8 @@
         }
     </script>
 
-    <style>
-        body {
-            background: linear-gradient(135deg, #180325 0%, #3a002c 40%, #1f0122 100%);
-            color: #FFF;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        .glass-card-interactive {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card-interactive:hover {
-            transform: translateY(-8px) scale(1.02);
-            border-color: rgba(255, 215, 0, 0.6);
-            box-shadow: 0 15px 35px rgba(255, 46, 147, 0.3);
-        }
-
-        /* Particle Overlay Canvas */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Glowing text effects */
-        .glow-text-gold {
-            text-shadow: 0 0 12px rgba(255, 215, 0, 0.7), 0 0 24px rgba(255, 107, 0, 0.5);
-        }
-
-        .glow-text-pink {
-            text-shadow: 0 0 12px rgba(255, 46, 147, 0.8), 0 0 24px rgba(216, 0, 50, 0.5);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #180325;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #FF6B00;
-            border-radius: 4px;
-        }
-
-        /* Diya Flame Animation */
-        .flame {
-            background: radial-gradient(circle, #FFF 10%, #FFD700 40%, #FF4500 80%, transparent 100%);
-            border-radius: 50% 50% 20% 20%;
-            transform-origin: center bottom;
-            animation: flicker 0.1s infinite alternate ease-in-out;
-        }
-
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-1deg); opacity: 0.95; }
-            100% { transform: scale(1.08) rotate(1deg); opacity: 1; filter: drop-shadow(0 0 12px #FFD700); }
-        }
-
-        /* Flip card styles */
-        .perspective-1000 {
-            perspective: 1000px;
-        }
-        .transform-style-3d {
-            transform-style: preserve-3d;
-        }
-        .backface-hidden {
-            backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-            transform: rotateY(180deg);
-        }
-    </style>
+    <!-- External CSS File -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="font-sans text-gray-100 relative selection:bg-festivePink selection:text-white">
 
@@ -346,7 +263,6 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        
         // 9 Days of Navratri Data
         const navratriDays = [
             {
@@ -414,14 +330,38 @@
             }
         ];
 
+        // Render Navratri Cards Dynamically
+        function renderNavratriGrid() {
+            const grid = document.getElementById('nineDaysGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = navratriDays.map((item, index) => `
+                <div class="glass-card glass-card-interactive rounded-2xl p-6 flex flex-col justify-between border border-festiveGold/20 relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br ${item.colorClass} opacity-50 pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-festiveGold/20 text-festiveGold border border-festiveGold/30">
+                                ${item.day}
+                            </span>
+                            <span class="text-xl">🪔</span>
+                        </div>
+                        <h3 class="font-heading text-lg font-bold text-white group-hover:text-festiveGold transition-colors">
+                            ${item.goddess}
+                        </h3>
+                        <p class="text-xs text-pink-300 font-semibold mb-3">Color: ${item.color}</p>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            "${item.wish}"
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // Global State variables
-        let audioCtx = null;
         let isPlayingAudio = false;
         let dandiyaScore = 0;
         let dandiyaCombo = 0;
-        let letterFlipped = false;
 
-        // Render Navratri Days Cards
         // Toggle Audio for music.mp3
         function toggleAudio() {
             const audio = document.getElementById('bgMusic');
@@ -444,6 +384,42 @@
             }
         }
 
+        // Light up all diyas function
+        function lightUpAllDiyas() {
+            const flames = document.querySelectorAll('.diya-flame');
+            flames.forEach(flame => {
+                flame.style.opacity = '1';
+            });
+            
+            confetti({
+                particleCount: 50,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#FF6B00', '#FF2E93']
+            });
+        }
+
+        // Smooth scroll helper
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Letter flip toggle
+        function toggleLetterFlip() {
+            const inner = document.getElementById('letterCardInner');
+            if (inner) {
+                inner.classList.toggle('rotate-y-180');
+                confetti({
+                    particleCount: 30,
+                    spread: 60,
+                    colors: ['#FF2E93', '#FFD700']
+                });
+            }
+        }
+
         // Dandiya Raas Interactive Rhythm Game
         function hitDandiya(event) {
             dandiyaScore += 10;
@@ -452,7 +428,6 @@
             document.getElementById('dandiyaScore').innerText = dandiyaScore;
             document.getElementById('dandiyaCombo').innerText = dandiyaCombo + 'x';
 
-            // Animate sticks together
             const left = document.getElementById('stickLeft');
             const right = document.getElementById('stickRight');
 
@@ -464,122 +439,18 @@
                 right.style.transform = 'rotate(45deg)';
             }, 150);
 
-            // Play Dandiya Stick Clash Sound
-            playDandiyaSound();
-
-            // Burst sparkles around click
-            const rect = event.currentTarget.getBoundingClientRect();
-            const x = (event.clientX - rect.left) / rect.width;
-            const y = (event.clientY - rect.top) / rect.height;
-
             confetti({
                 particleCount: 20,
                 spread: 40,
-                origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight },
+                origin: { x: 0.5, y: 0.7 },
                 colors: ['#FFD700', '#FF2E93', '#00FFFF']
             });
-        }
-
-        // Sound Synthesis (Web Audio API for Garba & Dandiya Beats)
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-        }
-
-        function playChimeSound() {
-            initAudioContext();
-            if (!audioCtx) return;
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-            osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.6); // C6
-
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.6);
-        }
-
-        function playDandiyaSound() {
-            initAudioContext();
-            if (!audioCtx) return;
-
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.08);
-
-            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.08);
-        }
-
-        function toggleAudio() {
-            initAudioContext();
-            const btnText = document.getElementById('musicStatus');
-
-            if (isPlayingAudio) {
-                clearInterval(beatInterval);
-                isPlayingAudio = false;
-                btnText.innerText = "Play Garba Beats 🎵";
-            } else {
-                isPlayingAudio = true;
-                btnText.innerText = "Pause Music ⏸️";
-                
-                let beatCount = 0;
-                // Simple 8-beat Garba Rhythm Loop Simulation
-                beatInterval = setInterval(() => {
-                    if (!audioCtx) return;
-
-                    const now = audioCtx.currentTime;
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-
-                    if (beatCount % 2 === 0) {
-                        // Bass Beat (Dholak Boom)
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(120, now);
-                        osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
-                        gain.gain.setValueAtTime(0.5, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                    } else {
-                        // Treble High Click (Dandiya Tap)
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(600, now);
-                        osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
-                        gain.gain.setValueAtTime(0.2, now);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                    }
-
-                    osc.start(now);
-                    osc.stop(now + 0.2);
-
-                    beatCount = (beatCount + 1) % 8;
-                }, 300);
-            }
         }
 
         // Particle Canvas Logic (Floating Petals & Stars)
         function initParticles() {
             const canvas = document.getElementById('particle-canvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
             let width = canvas.width = window.innerWidth;
